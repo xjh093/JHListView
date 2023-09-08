@@ -22,6 +22,14 @@
 - (void)refreshData;
 
 /**
+ 准备刷新。可通过此方法返回一些可变参数。子类重写。
+ 
+ @param isPullDown YES-下拉刷新，NO-上拉刷新
+ @return 请求中的可变参数
+ */
+- (NSDictionary *)prepareForRefresh:(BOOL)isPullDown;
+
+/**
  列表开始刷新。
  
  @param isPullDown YES-下拉刷新，NO-上拉刷新。
@@ -36,12 +44,14 @@
  */
 - (void)endRefresh:(BOOL)isPullDown count:(NSInteger)count;
 
+/**
+ 解析数据的方法，默认有实现(解析Data[@"OnlyOneData"]中的数组)，如果有多个数组，需要重写.
+
+ @param dic 对应返回数据中的"Data"
+ @param isPullDown 是否是下拉刷新
+ */
+- (void)handleData:(NSDictionary *)dic isPullDown:(BOOL)isPullDown;
+
 @end
 
 #endif /* JHListViewProtocol_h */
-
-
-
-
-
-
