@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "JHListViewConfig.h"
 #import "JHListViewProtocol.h"
+#import "MJRefresh.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
