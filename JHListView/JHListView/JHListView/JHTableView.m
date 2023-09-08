@@ -7,7 +7,6 @@
 //
 
 #import "JHTableView.h"
-#import "MJRefresh.h"
 
 @implementation JHTableViewConfig
 
@@ -83,6 +82,10 @@
     [_tableView.mj_header beginRefreshing];
 }
 
+- (NSDictionary *)prepareForRefresh:(BOOL)isPullDown{
+    return @{};
+}
+
 - (void)beginRefresh:(BOOL)isPullDown
 {
     // 子类实现
@@ -92,6 +95,7 @@
 {
     if (isPullDown) {
         [_tableView.mj_header endRefreshing];
+        [_tableView.mj_footer endRefreshing];
     }else{
         [_tableView.mj_footer endRefreshing];
     }
@@ -110,12 +114,14 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString *ID = NSStringFromClass(_config.cellClass);
+    id model = _dataArray[indexPath.row];
+    NSString *key = NSStringFromClass([model class]);
+    NSString *ID = _config.modelCellPair[key];
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
-    cell.selectionStyle = UITableViewCellSeparatorStyleNone;
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.accessibilityIdentifier = _config.identity;
-    if (_config.modelClass) {
-        [cell setValue:_dataArray[indexPath.row] forKey:@"model"];
+    if ([cell respondsToSelector:NSSelectorFromString(@"setModel:")]) {
+        [cell setValue:model forKey:@"model"];
     }
     return cell;
 }
@@ -149,11 +155,34 @@
             _tableView.sectionFooterHeight = _config.sectionFooterHeight;
         }
         
-        NSString *ID = NSStringFromClass(_config.cellClass);
-        if (_config.cellIsNib) {
-            [tableView registerNib:[UINib nibWithNibName:ID bundle:nil] forCellReuseIdentifier:ID];
+        NSMutableDictionary *mdic = @{}.mutableCopy;
+        if (_config.modelCells.count) {
+            for (JHModelCellConfig *mcc in _config.modelCells) {
+                NSString *ID = NSStringFromClass(mcc.cellClass);
+                if (mcc.cellIsNib) {
+                    [tableView registerNib:[UINib nibWithNibName:ID bundle:nil] forCellReuseIdentifier:ID];
+                }else{
+                    [tableView registerClass:mcc.cellClass forCellReuseIdentifier:ID];
+                }
+                
+                NSString *key = NSStringFromClass(mcc.modelClass);
+                NSString *val = NSStringFromClass(mcc.cellClass);
+                [mdic setValue:val forKey:key];
+            }
+            
+            _config.modelCellPair = mdic;
         }else{
-            [tableView registerClass:_config.cellClass forCellReuseIdentifier:ID];
+            NSString *ID = NSStringFromClass(_config.cellClass);
+            if (_config.cellIsNib) {
+                [tableView registerNib:[UINib nibWithNibName:ID bundle:nil] forCellReuseIdentifier:ID];
+            }else{
+                [tableView registerClass:_config.cellClass forCellReuseIdentifier:ID];
+            }
+            
+            NSString *key = NSStringFromClass(_config.modelClass);
+            [mdic setValue:ID forKey:key];
+            
+            _config.modelCellPair = mdic;
         }
     }
     return _tableView;
