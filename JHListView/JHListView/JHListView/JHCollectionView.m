@@ -7,7 +7,6 @@
 //
 
 #import "JHCollectionView.h"
-#import "MJRefresh.h"
 
 @implementation JHCollectionViewConfig
 
