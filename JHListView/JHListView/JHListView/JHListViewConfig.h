@@ -11,6 +11,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@interface JHModelCellConfig: NSObject
+@property (nonatomic,  assign) BOOL  cellIsNib;
+@property (nonatomic,  strong) Class cellClass;
+@property (nonatomic,  strong) Class modelClass;
+@end
+
 @interface JHListViewConfig : NSObject
 @property (nonatomic,    copy) NSString *identity;                  // 列表界面标识
 
@@ -25,6 +31,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic,    copy) NSString *url;                       // url
 @property (nonatomic,  strong) NSDictionary *urlParam;              // 请求参数
+
+@property (nonatomic,  strong) NSDictionary *data;                  // 其他相关数据
+
+// ============================== 存在多种 cell 时 ==============================
+
+/// 内部自动处理
+@property (nonatomic,  strong) NSDictionary *modelCellPair;
+/// 
+@property (nonatomic,  strong) NSArray<JHModelCellConfig*> *modelCells;
+
 @end
 
 NS_ASSUME_NONNULL_END
