@@ -8,6 +8,8 @@
 
 #import "JHListViewConfig.h"
 
-@implementation JHListViewConfig
+@implementation JHModelCellConfig
+@end
 
+@implementation JHListViewConfig
 @end
