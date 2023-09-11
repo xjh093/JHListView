@@ -45,9 +45,9 @@
 - (void)endRefresh:(BOOL)isPullDown count:(NSInteger)count;
 
 /**
- 解析数据的方法，默认有实现(解析Data[@"OnlyOneData"]中的数组)，如果有多个数组，需要重写.
+ 解析数据的方法，需要重写.
 
- @param dic 对应返回数据中的"Data"
+ @param dic 返回数据
  @param isPullDown 是否是下拉刷新
  */
 - (void)handleData:(NSDictionary *)dic isPullDown:(BOOL)isPullDown;
